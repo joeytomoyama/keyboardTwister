@@ -1,0 +1,5 @@
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    gap: 5px;
+}
