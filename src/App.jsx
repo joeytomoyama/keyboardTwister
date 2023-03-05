@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Keyboard from './components/Keyboard'
 import './App.css'
 

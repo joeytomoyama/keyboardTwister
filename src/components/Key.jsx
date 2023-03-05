@@ -1,7 +1,9 @@
+import React, { useState } from 'react'
 import './Key.css'
 
-export default function Key({letter}) {
+export default function Key({letter, pressedKeys}) {
+
     return (
-        <div className="key">{letter}</div>
+        <button className="key" onClick={() => console.log(pressedKeys)}>{letter}</button>
     )
 }
