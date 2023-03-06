@@ -2,29 +2,13 @@ import { useState, useEffect } from 'react'
 import Key from './Key'
 import './Keyboard.css'
 
-export default function Keyboard({keys}) {
-    const [pressedKeys, setPressedKeys] = useState([])
-
+export default function Keyboard({pressedKeys, keys}) {
     const makeKeys = () => {
-        return keys.map(key => <button className={pressedKeys.includes(key) ? 'key-pressed' : 'key'} onClick={() => console.log(pressedKeys)}>{key}</button>)
+        return keys.map(key => <button className={pressedKeys.includes(key) ? 'key-pressed' : 'key'}
+        onClick={() => console.log(pressedKeys)} key={key}>
+            {key}
+            </button>)
     }
-
-    useEffect(() => {
-        const handleKeyDown = e => {
-            if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key])
-        }
-        const handleKeyUp = e => {
-            setPressedKeys(pressedKeys => pressedKeys.filter(key => key !== e.key))
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-        window.addEventListener('keyup', handleKeyUp)
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown)
-            window.removeEventListener('keyup', handleKeyUp)
-        }
-    }, [pressedKeys])
 
     return (
         <div className='keyboard'>
