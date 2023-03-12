@@ -12,6 +12,13 @@ export default function App() {
   const [pressedKeys, setPressedKeys] = useState([])
   const [toBePressedKeys, setToBePressedKeys] = useState([])
 
+  function checkKeys() {
+    setPressedKeys(pressedKeys.sort())
+    setToBePressedKeys(toBePressedKeys.sort())
+    console.log(pressedKeys)
+    console.log(toBePressedKeys)
+  }
+
   useEffect(() => {
       const handleKeyDown = e => {
           if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key])
@@ -32,7 +39,7 @@ export default function App() {
   return (
     <div className="App">
       <KeyGenerator keys={keys} pressedKeys={pressedKeys} toBePressedKeys={toBePressedKeys} setToBePressedKeys={setToBePressedKeys} />
-      <Keyboard keys={keys} pressedKeys={pressedKeys} />
+      <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />
       <Player amount={keys} pressedKeys={pressedKeys} toBePressedKeys={toBePressedKeys} />
     </div>
   )

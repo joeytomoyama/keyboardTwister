@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import Key from './Key'
 import './Keyboard.css'
 
-export default function Keyboard({pressedKeys, keys}) {
+export default function Keyboard({keys, pressedKeys, checkKeys}) {
     const makeKeys = () => {
         return keys.map(key => <button className={pressedKeys.includes(key) ? 'key-pressed' : 'key'}
-        onClick={() => console.log(pressedKeys)} key={key}>
+        onClick={() => checkKeys()} key={key}>
             {key}
-            </button>)
+        </button>)
     }
 
     return (

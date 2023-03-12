@@ -12,12 +12,15 @@ export default function KeyGenerator({keys, pressedKeys, toBePressedKeys, setToB
     }
     
     return (
-        <div style={{
-            width: '50px',
-            height: '50px',
-            backgroundColor: 'red',
-        }} onClick={() => setToBePressedKeys(toBePressedKeys => [...toBePressedKeys, generate()], )}>
-            {toBePressedKeys[toBePressedKeys.length - 1]}
+        <div className="centerer">
+            <div style={{
+                width: '50px',
+                height: '50px',
+                backgroundColor: 'red',
+                borderRadius: '50px',
+            }} onClick={() => setToBePressedKeys(toBePressedKeys => [...toBePressedKeys, generate()], )}>
+                {toBePressedKeys[toBePressedKeys.length - 1]}
+            </div>
         </div>
     )
 }
