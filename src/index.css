@@ -73,3 +73,21 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
 }
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  gap: 5px;
+}
+
+.key{
+  width: 50px;
+  height: 50px;
+  background-color: gray;
+}
+
+.key-pressed {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+}

@@ -4,8 +4,8 @@ export default function Player({keys, pressedKeys, toBePressedKeys}) {
 
     return (
         <>
-            <ul>{pressedKeys}</ul>
-            <ul>{toBePressedKeys}</ul>
+            <ul>pressed keys: {pressedKeys}</ul>
+            <ul>to be pressed: {toBePressedKeys}</ul>
         </>
     )
 }

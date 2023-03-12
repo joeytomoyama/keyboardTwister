@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
-export default function KeyGenerator({keys, pressedKeys, toBePressedKeys, setToBePressedKeys}) {
+export default function KeyGenerator({keys, pressedKeys, toBePressedKeys, setToBePressedKeys, generate}) {
     const [keysLeft, setKeysLeft] = useState(keys)
-    const generate = () => {
-        const randomIndex = Math.floor(Math.random() * keysLeft.length)
-        const toReturn = keysLeft[randomIndex]
-        console.log(keysLeft)
-        setKeysLeft(keysLeft => keysLeft.filter(k => k !== keysLeft[randomIndex]))
-        console.log(keysLeft)
-        return toReturn
+  
+    function generate() {
+            const randomIndex = Math.floor(Math.random() * keysLeft.length)
+            const generatedKey = keysLeft[randomIndex]
+            setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey))
+            console.log(keysLeft)
+            return generatedKey
     }
     
     return (
@@ -18,7 +18,7 @@ export default function KeyGenerator({keys, pressedKeys, toBePressedKeys, setToB
                 height: '50px',
                 backgroundColor: 'red',
                 borderRadius: '50px',
-            }} onClick={() => setToBePressedKeys(toBePressedKeys => [...toBePressedKeys, generate()], )}>
+            }} onClick={() => setToBePressedKeys(toBePressedKeys => [...toBePressedKeys, generate()].sort())}>
                 {toBePressedKeys[toBePressedKeys.length - 1]}
             </div>
         </div>
