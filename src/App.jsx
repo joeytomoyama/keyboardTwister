@@ -10,27 +10,26 @@ export default function App() {
   'z', 'x', 'c', 'v', 'b', 'n', 'm'])
 
   const [pressedKeys, setPressedKeys] = useState([])
-  const [toBePressedKeys, setToBePressedKeys] = useState([])
-  // const [keysLeft, setKeysLeft] = useState(keys)
+  const [keysToPress, setKeysToPress] = useState([])
+  const [keysLeft, setKeysLeft] = useState(keys)
+  const [stillInGame, setStillInGame] = useState(true)
   
-  // function generate() {
-  //       const randomIndex = Math.floor(Math.random() * keysLeft.length)
-  //       const generatedKey = keysLeft[randomIndex]
-  //       setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey))
-  //       console.log(keysLeft)
-  //       return generatedKey
-  // }
+  function generateKey() {
+        const randomIndex = Math.floor(Math.random() * keysLeft.length)
+        const generatedKey = keysLeft[randomIndex]
+        setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey).sort())
+        const keysToPressNext = keysToPress.slice()
+        keysToPressNext.push(generatedKey)
+        // keysToPressNext.sort()
+        setKeysToPress(keysToPressNext)
+  }
 
   function checkKeys() {
-    // setPressedKeys(pressedKeys.sort())
-    // setToBePressedKeys(toBePressedKeys.sort())
-    console.log(pressedKeys)
-    console.log(toBePressedKeys)
+    setStillInGame(keysToPress.every(key => pressedKeys.includes(key)) && keysToPress.length === pressedKeys.length)
   }
 
   useEffect(() => {
       const handleKeyDown = e => {
-        // checkKeys()
         if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key].sort())
       }
       const handleKeyUp = e => {
@@ -40,6 +39,8 @@ export default function App() {
       window.addEventListener('keydown', handleKeyDown)
       window.addEventListener('keyup', handleKeyUp)
 
+      checkKeys()
+
       return () => {
           window.removeEventListener('keydown', handleKeyDown)
           window.removeEventListener('keyup', handleKeyUp)
@@ -48,10 +49,10 @@ export default function App() {
 
   return (
     <div className="App">
-      <button onClick={generate}>generate</button>
-      <KeyGenerator keys={keys} pressedKeys={pressedKeys} toBePressedKeys={toBePressedKeys} setToBePressedKeys={setToBePressedKeys} generate={generate} />
+      {!stillInGame && <div>YOU LOST!!!</div>}
+      <KeyGenerator keysToPress={keysToPress} generateKey={generateKey} />
       <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />
-      <Player amount={keys} pressedKeys={pressedKeys} toBePressedKeys={toBePressedKeys} />
+      <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />
     </div>
   )
 }

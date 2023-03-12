@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import './Key.css'
 
 export default function Key({letter, pressedKeys}) {
 
