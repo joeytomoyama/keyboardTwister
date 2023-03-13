@@ -14,9 +14,11 @@ export default function App() {
   const [players, setPlayers] = useState(0)
   const [round, setRound] = useState(0)
   const [pressedKeys, setPressedKeys] = useState([])
+  const [generatedKey, setGeneratedKey] = useState(null)
   const [keysToPress, setKeysToPress] = useState([])
   const [keysLeft, setKeysLeft] = useState(keys)
   const [gameState, setGameState] = useState('before')
+  const [loser, setLoser] = useState(null)
 
   function startGame(players) {
     setGameState('during')
@@ -28,27 +30,44 @@ export default function App() {
     return round % players
   }
   
+  // let generatedKey
   function generateKey() {
     const randomIndex = Math.floor(Math.random() * keysLeft.length)
     const generatedKey = keysLeft[randomIndex]
-    setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey).sort())
+    setGeneratedKey(generatedKey)
+    setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey))
+
     const keysToPressNext = keysToPress.slice()
     keysToPressNext[currentPlayer()].push(generatedKey)
     setKeysToPress(keysToPressNext)
-    setTimeout(() => console.log(keysToPress.join('\n')), 100)
+    // setTimeout(() => console.log(keysToPress.join('\n')), 100)
     setRound(round + 1)
   }
 
   function checkKeys() {
-    // if (!keysToPress.every(key => pressedKeys.includes(key))) setGameState('after')
     keysToPress.forEach((subArray, i) => {
-      if (!subArray.every(key => pressedKeys.includes(key))) console.log('loser:', i)
+      if (!subArray.every(key => pressedKeys.includes(key))) {
+        setLoser(i)
+        setGameState('after')
+      }
     })
+    // console.log(keysToPress.reduce((accumulator, currentValue) => accumulator + currentValue.length, 0))
+    console.log('round:', round)
+    if (pressedKeys.length !== round) {
+      // console.log(currentPlayer() + ' lost')
+      setLoser(currentPlayer())
+      setGameState('after')
+    }
   }
 
   function restartGame() {
+    setPlayers(0)
+    setRound(0)
+    setGeneratedKey(null)
     setKeysToPress([])
+    setKeysLeft(keys)
     setGameState('before')
+    setLoser(null)
   }
 
   useEffect(() => {
@@ -73,10 +92,10 @@ export default function App() {
   return (
     <div className="App">
       {gameState === 'before' && <SelectScreen startGame={startGame} />}
-      {gameState === 'during' && <KeyGenerator keysToPress={keysToPress} generateKey={generateKey} />}
+      {gameState === 'during' && <KeyGenerator generatedKey={generatedKey} generateKey={generateKey} />}
       {gameState === 'during' && <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />}
       {gameState === 'during' && <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />}
-      {gameState === 'after' && <GameOverScreen restartGame={restartGame} />}
+      {gameState === 'after' && <GameOverScreen loser={loser} restartGame={restartGame} />}
     </div>
   )
 }

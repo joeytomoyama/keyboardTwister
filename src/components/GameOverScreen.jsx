@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function GameOverScreen({restartGame}) {
+export default function GameOverScreen({loser, restartGame}) {
   return (
     <div className="selectScreen centerer">
-      <p>you lost</p>
+      <p>player {loser + 1} lost</p>
       <button onClick={() => restartGame()}>restart</button>
     </div>
   )

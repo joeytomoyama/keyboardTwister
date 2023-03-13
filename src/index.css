@@ -85,6 +85,13 @@ button:focus-visible {
   opacity: 70%;
 }
 
+.keyGenerator {
+  width: 50px;
+  height: 50px;
+  border: 2px solid white;
+  border-radius: 10px;
+}
+
 .keyboard {
   display: grid;
   grid-template-columns: repeat(10, 50px);
