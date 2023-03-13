@@ -11,24 +11,39 @@ export default function App() {
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
   'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'])
 
+  const [players, setPlayers] = useState(0)
+  const [round, setRound] = useState(0)
   const [pressedKeys, setPressedKeys] = useState([])
   const [keysToPress, setKeysToPress] = useState([])
   const [keysLeft, setKeysLeft] = useState(keys)
   const [gameState, setGameState] = useState('before')
+
+  function startGame(players) {
+    setGameState('during')
+    setPlayers(players)
+    setKeysToPress(Array.from({ length: players }, () => [])) // chatgpt code
+  }
+
+  function currentPlayer() {
+    return round % players
+  }
   
   function generateKey() {
-        const randomIndex = Math.floor(Math.random() * keysLeft.length)
-        const generatedKey = keysLeft[randomIndex]
-        setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey).sort())
-        const keysToPressNext = keysToPress.slice()
-        keysToPressNext.push(generatedKey)
-        // keysToPressNext.sort()
-        setKeysToPress(keysToPressNext)
+    const randomIndex = Math.floor(Math.random() * keysLeft.length)
+    const generatedKey = keysLeft[randomIndex]
+    setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey).sort())
+    const keysToPressNext = keysToPress.slice()
+    keysToPressNext[currentPlayer()].push(generatedKey)
+    setKeysToPress(keysToPressNext)
+    setTimeout(() => console.log(keysToPress.join('\n')), 100)
+    setRound(round + 1)
   }
 
   function checkKeys() {
-    if (!keysToPress.every(key => pressedKeys.includes(key))) setGameState('after')
-    // setGameState(keysToPress.every(key => pressedKeys.includes(key)) && keysToPress.length === pressedKeys.length)
+    // if (!keysToPress.every(key => pressedKeys.includes(key))) setGameState('after')
+    keysToPress.forEach((subArray, i) => {
+      if (!subArray.every(key => pressedKeys.includes(key))) console.log('loser:', i)
+    })
   }
 
   function restartGame() {
@@ -57,7 +72,7 @@ export default function App() {
 
   return (
     <div className="App">
-      {gameState === 'before' && <SelectScreen setGameState={setGameState} />}
+      {gameState === 'before' && <SelectScreen startGame={startGame} />}
       {gameState === 'during' && <KeyGenerator keysToPress={keysToPress} generateKey={generateKey} />}
       {gameState === 'during' && <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />}
       {gameState === 'during' && <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />}

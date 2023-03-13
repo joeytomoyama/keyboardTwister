@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function KeyGenerator({keysToPress, generateKey}) {
+export default function KeyGenerator({keysToPress2, generateKey}) {
     
     return (
         <div className="centerer">
@@ -10,7 +10,7 @@ export default function KeyGenerator({keysToPress, generateKey}) {
                 backgroundColor: 'red',
                 borderRadius: '50px',
             }} onClick={generateKey}>
-                {keysToPress[keysToPress.length - 1]}
+                {/* {keysToPress2[keysToPress2.length - 1]} */}
             </div>
         </div>
     )
