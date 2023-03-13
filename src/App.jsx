@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import Keyboard from './components/Keyboard'
+import SelectScreen from './components/SelectScreen'
 import KeyGenerator from './components/KeyGenerator'
+import Keyboard from './components/Keyboard'
 import Player from './components/Player'
+import GameOverScreen from './components/GameOverScreen'
 import './App.css'
 
 export default function App() {
   const [keys, setKeys] = useState(['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
-  'z', 'x', 'c', 'v', 'b', 'n', 'm'])
+  'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'])
 
   const [pressedKeys, setPressedKeys] = useState([])
   const [keysToPress, setKeysToPress] = useState([])
   const [keysLeft, setKeysLeft] = useState(keys)
-  const [stillInGame, setStillInGame] = useState(true)
+  const [gameState, setGameState] = useState('before')
   
   function generateKey() {
         const randomIndex = Math.floor(Math.random() * keysLeft.length)
@@ -25,7 +27,13 @@ export default function App() {
   }
 
   function checkKeys() {
-    setStillInGame(keysToPress.every(key => pressedKeys.includes(key)) && keysToPress.length === pressedKeys.length)
+    if (!keysToPress.every(key => pressedKeys.includes(key))) setGameState('after')
+    // setGameState(keysToPress.every(key => pressedKeys.includes(key)) && keysToPress.length === pressedKeys.length)
+  }
+
+  function restartGame() {
+    setKeysToPress([])
+    setGameState('before')
   }
 
   useEffect(() => {
@@ -49,10 +57,11 @@ export default function App() {
 
   return (
     <div className="App">
-      {!stillInGame && <div>YOU LOST!!!</div>}
-      <KeyGenerator keysToPress={keysToPress} generateKey={generateKey} />
-      <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />
-      <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />
+      {gameState === 'before' && <SelectScreen setGameState={setGameState} />}
+      {gameState === 'during' && <KeyGenerator keysToPress={keysToPress} generateKey={generateKey} />}
+      {gameState === 'during' && <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />}
+      {gameState === 'during' && <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />}
+      {gameState === 'after' && <GameOverScreen restartGame={restartGame} />}
     </div>
   )
 }
