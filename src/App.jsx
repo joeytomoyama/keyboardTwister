@@ -21,9 +21,9 @@ export default function App() {
   const [loser, setLoser] = useState(null)
 
   function startGame(players) {
-    setGameState('during')
     setPlayers(players)
     setKeysToPress(Array.from({ length: players }, () => [])) // chatgpt code
+    setGameState('during')
   }
 
   function currentPlayer() {
@@ -38,24 +38,22 @@ export default function App() {
     setKeysLeft(keysLeft => keysLeft.filter(k => k !== generatedKey))
 
     const keysToPressNext = keysToPress.slice()
+    console.log(keysToPressNext, round, players)
     keysToPressNext[currentPlayer()].push(generatedKey)
     setKeysToPress(keysToPressNext)
     // setTimeout(() => console.log(keysToPress.join('\n')), 100)
-    setRound(round + 1)
+    // setRound(round + 1)
   }
 
   function checkKeys() {
     keysToPress.forEach((subArray, i) => {
       if (!subArray.every(key => pressedKeys.includes(key))) {
-        setLoser(i)
+        if (gameState === 'during') setLoser(i)
         setGameState('after')
       }
     })
-    // console.log(keysToPress.reduce((accumulator, currentValue) => accumulator + currentValue.length, 0))
-    console.log('round:', round)
     if (pressedKeys.length !== round) {
-      // console.log(currentPlayer() + ' lost')
-      setLoser(currentPlayer())
+      if (gameState === 'during') setLoser(currentPlayer())
       setGameState('after')
     }
   }
@@ -71,27 +69,58 @@ export default function App() {
   }
 
   useEffect(() => {
-      const handleKeyDown = e => {
-        if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key].sort())
-      }
-      const handleKeyUp = e => {
-          setPressedKeys(pressedKeys => pressedKeys.filter(key => key !== e.key).sort())
-      }
+    const handleKeyDown = e => {
+      console.log('key down')
+      console.log(pressedKeys)
+      setPressedKeys('yo')
+      // // setPressedKeys(pressedKeys => [...pressedKeys, e.key].sort())
+      // const pressedKeysNext = pressedKeys.slice()
+      // pressedKeysNext.push(e.key)
+      // console.log(pressedKeysNext)
+      // setPressedKeys(pressedKeysNext)
+      // if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key].sort())
+    }
+    const handleKeyUp = e => {
+      console.log('key up')
+      // setPressedKeys(pressedKeys => pressedKeys.filter(key => key !== e.key).sort())
+      setPressedKeys(pressedKeys.filter(key => key !== e.key).sort())
+    }
 
-      window.addEventListener('keydown', handleKeyDown)
-      window.addEventListener('keyup', handleKeyUp)
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
 
-      checkKeys()
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
 
-      return () => {
-          window.removeEventListener('keydown', handleKeyDown)
-          window.removeEventListener('keyup', handleKeyUp)
-      }
-  }, [pressedKeys])
+  // useEffect(() => {
+  //     // const handleKeyDown = e => {
+  //     //   if (!pressedKeys.includes(e.key)) setPressedKeys(pressedKeys => [...pressedKeys, e.key].sort())
+  //     // }
+  //     // const handleKeyUp = e => {
+  //     //     setPressedKeys(pressedKeys => pressedKeys.filter(key => key !== e.key).sort())
+  //     // }
+
+  //     // window.addEventListener('keydown', handleKeyDown)
+  //     // window.addEventListener('keyup', handleKeyUp)
+
+  //     checkKeys()
+
+  //     setRound(round + 1)
+
+  //     // return () => {
+  //     //     window.removeEventListener('keydown', handleKeyDown)
+  //     //     window.removeEventListener('keyup', handleKeyUp)
+  //     // }
+  // }, [pressedKeys])
 
   return (
     <div className="App">
       {gameState === 'before' && <SelectScreen startGame={startGame} />}
+      {gameState === 'during' && <p>round: {round}</p>}
+      {gameState === 'during' && <p>player: {currentPlayer()+1}</p>}
       {gameState === 'during' && <KeyGenerator generatedKey={generatedKey} generateKey={generateKey} />}
       {gameState === 'during' && <Keyboard keys={keys} pressedKeys={pressedKeys} checkKeys={checkKeys} />}
       {gameState === 'during' && <Player amount={keys} pressedKeys={pressedKeys} keysToPress={keysToPress} />}
