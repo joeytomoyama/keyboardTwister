@@ -6,19 +6,15 @@ export default function Keyboard({keys, pressedKeys, keysToPress}) {
 
     function makeKeys() {
         return keys.map(key => {
-            let keyColor = null
-            keysToPress.forEach((userKeys, index) => {
-                if (keysToPress[index].includes(key)) keyColor = playerColors[index]
+            let keyColor = 'black'
+            keysToPress.forEach((subArray, index) => {
+                if (subArray.includes(key)) keyColor = playerColors[index]
             })
-            const isPressed = pressedKeys.includes(key) ? keyColor : null
-            // let isPressed = 'black'
-            // if (keyColor) {
-            //     isPressed = pressedKeys.includes(key) ? keyColor : null
-            // }
-            // const isPressed = pressedKeys.includes(key) ? 'key-pressed' : 'key' // inline: `${pressedKeys.includes(key) ? 'key-pressed' : 'key'}`
+            const keyBGColor = pressedKeys.includes(key) ? keyColor : null
+            // const keyBGColor = pressedKeys.includes(key) ? 'key-pressed' : 'key' // inline: `${pressedKeys.includes(key) ? 'key-pressed' : 'key'}`
             return <div className={'key centerer'} key={key} style={{
                 borderColor: keyColor,
-                backgroundColor: isPressed
+                backgroundColor: keyBGColor
             }}>
                 {key}
             </div>
