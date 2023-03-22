@@ -39,6 +39,7 @@ export default function App() {
   function restartGame() {
     setPlayers(0)
     setRound(-1)
+    setPressedKeys([])
     setGeneratedKey(null)
     setKeysToPress([])
     setKeysLeft(keys)
